@@ -4,7 +4,7 @@ import EventForm from '../eventForm/EventForm';
 import EventList from './EventList';
 import {sampleData} from '../../../app/api/sampleData'
 
-export default function EventDashboard() {
+export default function EventDashboard({formOpen, setFormOpen}) {
     const [events, setEvents] = useState(sampleData);
 
     return (
@@ -13,7 +13,8 @@ export default function EventDashboard() {
                 <EventList events={events} />
             </Grid.Column>
             <Grid.Column width={6}>
-                <EventForm />
+                {formOpen &&
+                <EventForm setFormOpen={setFormOpen}/>}
             </Grid.Column>
         </Grid>
     )
