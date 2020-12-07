@@ -2,6 +2,11 @@ import firebase from '../config/firebase';
 import { setUserProfileData } from './firestoreService';
 import {toast} from 'react-toastify';
 
+export function firebaseObjectToArray(snapshot) {
+    if(snapshot) {
+        return Object.entries(snapshot).map(e => Object.assign({}, e[1], {id: e[0]}));
+    }
+}
 export function signInWithEmail(creds) {
     return firebase
     .auth()
@@ -47,4 +52,20 @@ export async function socialLogin(selectedProvider) {
 export function updateUserPassword(creds) {
     const user = firebase.auth().currentUser;
     return user.updatePassword(creds.newPassword1);
+}
+
+export function addEventChatComment(eventId, comment) {
+    const user = firebase.auth().currentUser;
+    const newComment = {
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        uid: user.uid,
+        text: comment,
+        date: Date.now()
+    }
+    return firebase.database().ref(`chat/${eventId}`).push(newComment);
+}
+
+export function getEventChatRef(eventId) {
+    return firebase.database().ref(`chat/${eventId}`).orderByKey()
 }
