@@ -1,18 +1,39 @@
+import {
+  asyncActionError,
+  asyncActionFinsh,
+  asyncActionStart,
+} from "../../app/async/asyncReducer";
+import {toast} from 'react-toastify';
+import { delay } from "../../app/common/util/util";
 const INCREMENT_COUNTER = "INCREMENT_COUNTER";
 const DECREMENT_COUNTER = "DECREMENT_COUNTER";
 
 export function increment(amount) {
-    return {
-        type: INCREMENT_COUNTER,
-        payload: amount
+  return async function (dispatch) {
+    dispatch(asyncActionStart());
+    try {
+      await delay(1000);
+      dispatch({ type: INCREMENT_COUNTER, payload: amount });
+      dispatch(asyncActionFinsh());
+    } catch (error) {
+      dispatch(asyncActionError(error));
     }
+  };
 }
 
-export function deccrement(amount) {
-    return {
-        type: DECREMENT_COUNTER,
-        payload: amount
+export function decrement(amount) {
+  return async function (dispatch) {
+    dispatch(asyncActionStart());
+    try {
+      await delay(1000);
+      throw 'oops';
+      dispatch({ type: DECREMENT_COUNTER, payload: amount });
+      dispatch(asyncActionFinsh());
+    } catch (error) {
+      dispatch(asyncActionError(error));
+      toast.error(error);
     }
+  };
 }
 
 const initialState = {
